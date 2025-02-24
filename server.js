@@ -3,7 +3,6 @@ const http = require('http');
 const {Server} = require('socket.io');
 const UserManager = require('./UserManager')
 const cors = require('cors');
-const eventEmitter = require('./events/index')
 
 const app = express();
 const server = http.createServer(app);
@@ -18,18 +17,22 @@ app.use(cors());
 const manager = new UserManager();
 
 io.on('connection', (socket) => {
-    console.log("New User conncted.....")
+    console.log(socket.handshake.query.username)
+    console.log("New User connected.....")
+    console.log(socket.id)
     let user = manager.addUser(socket);
-    console.log(user.partner&&user.partner.id)
-
     socket.on('chat message', (msg) => {
         console.log(msg);
+
+        console.log(user)
         user.sendMessage(msg);
     })
 
+    // socket.on('')
+
     socket.on('disconnect', () => {
         console.log("removing user " + socket.id)
-        manager.removeUser(socket);
+        manager.removeUser(user);
     })
 
 })

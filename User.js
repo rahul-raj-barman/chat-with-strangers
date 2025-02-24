@@ -3,11 +3,13 @@ class User {
         this.socket = socket;
         this.partner = null;
         this.id = socket.id;
+        this.username = socket.handshake.query.username
     }
 
     setPartner(partner) {
+        console.log("yees")
         this.partner = partner;
-        this.socket.to(this.partner.id).emit('partner', this.partner.id)
+        this.socket.to(this.partner.id).emit('partner', this.username)
     }
 
     sendMessage(message) {
@@ -16,10 +18,6 @@ class User {
         if(this.partner == null) return;
         this.socket.to(this.partner.id).emit('chat message' ,message);
     }
-
-    // receiveMessage(message) {
-    //     this.socket.to(this.socket.id).emit(message);
-    // }
 
 }
 
